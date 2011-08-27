@@ -58,3 +58,4 @@ The server module is used for working with dedicated as well as Cascade servers:
 
     {'message': 'VM rebooted', 'result': 'ok', 'success': True}
 
+
