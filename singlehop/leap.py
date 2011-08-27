@@ -532,3 +532,22 @@ class ServerModule(SingleHopModule):
             data['data'] = resp.content
             return json.loads(data)
 
+    def cascade_delete_vm(self, vm_id=None):
+        """
+        Deletes a Cascade virtual machine
+
+        :keyword vm_id: ID of virtual machine
+
+        """
+        if not vm_id:
+            raise SingleHopError('You must specify a vm_id')
+        data = {}
+        data['vmid'] = vm_id
+        resp = self.do_request(command='cascadeDeleteVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
