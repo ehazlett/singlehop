@@ -551,3 +551,60 @@ class ServerModule(SingleHopModule):
             data['data'] = resp.content
             return json.loads(data)
 
+    def cascade_reboot_vm(self, vm_id=None):
+        """
+        Reboots a Cascade virtual machine
+
+        :keyword vm_id: ID of virtual machine
+
+        """
+        if not vm_id:
+            raise SingleHopError('You must specify a vm_id')
+        data = {}
+        data['vmid'] = vm_id
+        resp = self.do_request(command='cascadeRebootVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def cascade_shutdown_vm(self, vm_id=None):
+        """
+        Shuts down a Cascade virtual machine
+
+        :keyword vm_id: ID of virtual machine
+
+        """
+        if not vm_id:
+            raise SingleHopError('You must specify a vm_id')
+        data = {}
+        data['vmid'] = vm_id
+        resp = self.do_request(command='cascadeShutdownVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+    
+    def cascade_start_vm(self, vm_id=None):
+        """
+        Starts a Cascade virtual machine
+
+        :keyword vm_id: ID of virtual machine
+
+        """
+        if not vm_id:
+            raise SingleHopError('You must specify a vm_id')
+        data = {}
+        data['vmid'] = vm_id
+        resp = self.do_request(command='cascadeStartVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+    
