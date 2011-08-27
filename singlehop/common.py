@@ -89,6 +89,6 @@ class SingleHopModule(object):
                 raise SingleHopError('Data must be specified as a dict')
             request['data'] = data
         js = json.dumps(request).replace(' ', '%20')
-        resp = requests.get(self._endpoint_url + js)
+        resp = requests.get(self._endpoint_url + js, timeout=10.0)
         return resp
 

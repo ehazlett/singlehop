@@ -81,7 +81,9 @@ class AccountModule(SingleHopModule):
         """
         Deletes a Tandem user
 
-        **Currently unsupported by SingleHopAPI
+        ** Currently unsupported by SingleHopAPI
+
+        Error: Call to undefined method MDB2_Error::fetchOne() in <b>/home/leap/lib/class/Tandem.class.php</b> on line <b>30</b>
         
         :keyword user_id: ID of user to delete
         
@@ -133,4 +135,197 @@ class AccountModule(SingleHopModule):
             return json.loads(resp.content)
         except:
             return resp.content
+
+class ServerModule(SingleHopModule):
+    """
+    Server module to handle SingleHop server
+    operations
+
+    http://apiwiki.singlehop.com/index.php/Server_Module
+
+    """
+    def __init__(self, *args, **kwargs):
+        super(ServerModule, self).__init__(module='server', *args, **kwargs)
+
+    def list_servers(self):
+        """
+        Gets list of servers
+
+        """
+        resp = self.do_request(command='listServers')
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def get_server_details(self, server_id=None):
+        """
+        Gets the details of the specified server
+
+        ** Currently doesn't work with SingleHop API:
+
+        Error: Call to undefined method Cascade::getFreeStorage() in <b>/home/leap/lib/class/Api.class.php</b> on line <b>624</b>
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='getServerDetails', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def get_server_ips(self, server_id=None):
+        """
+        Gets list of allocated IPs for specified server
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='getServerIps', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def get_server_bandwidth(self, server_id=None):
+        """
+        Gets bandwidth totals for specified server
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='getServerBandwidth', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def get_rdns_list(self, server_id=None):
+        """
+        Gets list of Reverse DNS entries for specified server
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='getRdnsList', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+    
+    def update_rdns(self, entries=None):
+        """
+        Updates Reverse DNS entries for an assigned IP
+
+        :keyword entries: Dict of IP/host pairs
+
+        """
+        if not server_id or not entries:
+            raise SingleHopError('You must specify a server_id and entries')
+        resp = self.do_request(command='updateRdns', data=entries)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+    
+    def reboot_server(self, server_id=None):
+        """
+        Reboots the specified server
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='rebootServer', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def get_os_list(self, server_id=None):
+        """
+        Gets the list of operating systems available for installation
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='getOsList', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def reinstall_server(self, server_id=None, os_id=None):
+        """
+        Reinstalls the specified server with the specified OS id
+
+        :keyword server_id: ID of server
+        :keyword os_id: ID of operating system to install
+
+        """
+        if not server_id or not os_id:
+            raise SingleHopError('You must specify a server_id and os_id')
+        data = {}
+        data['serverid'] = server_id
+        data['osid'] = os_id
+        resp = self.do_request(command='reinstallServer', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+    
+    def list_available_servers(self):
+        """
+        Lists servers available for purchase
+
+        """
+        resp = self.do_request(command='listAvailableServers')
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
 
