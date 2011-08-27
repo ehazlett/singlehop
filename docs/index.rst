@@ -10,6 +10,12 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   
+.. autoclass:: singlehop.leap.AccountModule
+   :members:
+
+.. autoclass:: singlehop.leap.ServerModule
+   :members:
 
 Indices and tables
 ==================
