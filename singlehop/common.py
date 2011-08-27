@@ -19,12 +19,13 @@ class SingleHopModule(object):
 
     """
     def __init__(self, api_key=None, client_id=None, password=None, \
-        endpoint_url=None, module=None):
+        endpoint_url=None, module=None, timeout=None):
         self._api_key = api_key
         self._client_id = client_id
         self._password = password
         self._endpoint_url = endpoint_url
         self._module = module
+        self._timeout = timeout
         # load defaults if needed
         if not self._api_key:
             self._api_key = settings.API_KEY
@@ -34,6 +35,8 @@ class SingleHopModule(object):
             self._password = settings.PASSWORD
         if not self._endpoint_url:
             self._endpoint_url = settings.ENDPOINT_URL
+        if not self._timeout:
+            self._timeout = 300.0
     
     def _login_required(func):
         '''Decorator to check that auth credentials exist'''
@@ -56,9 +59,12 @@ class SingleHopModule(object):
     @property # getter for _endpoint_url
     def endpoint_url(self):
         return self._endpoint_url
-    @property # getter for module
+    @property # getter for _module
     def module(self):
         return self._module
+    @property # getter for _timeout
+    def timeout(self):
+        return self._timeout
 
     @_login_required
     def do_request(self, command=None, data=None):
@@ -89,6 +95,6 @@ class SingleHopModule(object):
                 raise SingleHopError('Data must be specified as a dict')
             request['data'] = data
         js = json.dumps(request).replace(' ', '%20')
-        resp = requests.get(self._endpoint_url + js, timeout=10.0)
+        resp = requests.get(self._endpoint_url + js, timeout=self._timeout)
         return resp
 
