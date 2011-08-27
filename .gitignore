@@ -2,3 +2,4 @@
 *.swp
 *.log
 local_settings.py
+docs/_build/*
