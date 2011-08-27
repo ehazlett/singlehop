@@ -509,3 +509,26 @@ class ServerModule(SingleHopModule):
             data = {}
             data['data'] = resp.content
             return json.loads(data)
+
+    def cascade_snapshot_vm(self, vm_id=None, image_id=None):
+        """
+        Creates a new OS snapshot image
+
+        :keyword vm_id: ID of virtual machine
+        :keyword image_id: (optional) ID of image to overwrite
+
+        """
+        if not vm_id:
+            raise SingleHopError('You must specify a vm_id')
+        data = {}
+        data['vmid'] = vm_id
+        if image_id:
+            data['imageid'] = image_id
+        resp = self.do_request(command='cascadeSnapshotVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
