@@ -409,3 +409,43 @@ class ServerModule(SingleHopModule):
             data = {}
             data['data'] = resp.content
             return json.loads(data)
+
+    def cascade_edit_vm(self, vm_id=None, hostname=None, ram=None, storage=None, \
+        cpu=None, vcpu=None, password=None):
+        """
+        Edits specified Cascade VM
+
+        :keyword vm_id: ID of virtual machine to edit
+        :keyword hostname: (optional) Hostname of vm ; must be unique
+        :keyword ram: (optional) Ram size in bytes
+        :keyword storage: (optional) Storage size in bytes
+        :keyword cpu: (optional) CPU priority, 1-100
+        :keyword vcpu: (optional) Number of virtual cpus to create, 0-16
+        :keyword password: (optional) Root password of VM
+
+        """
+        if not vm_id:
+            raise SingleHopError('You must specify a vm_id')
+        data = {}
+        data['vmid'] = vm_id
+        if hostname:
+            data['hostname'] = hostname
+        if ram:
+            data['ram'] = ram
+        if storage:
+            data['storage'] = storage
+        if cpu:
+            data['cpu'] = cpu
+        if vcpu:
+            data['vcpu'] = vcpu
+        if password:
+            data['password'] = password
+        resp = self.do_request(command='cascadeEditVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+
