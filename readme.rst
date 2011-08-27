@@ -7,9 +7,11 @@ Configuration
 ================
 
 Create a `local_settings.py` file (or edit `settings.py`) in the `singlehop` directory with the following:
-    
+
     API_KEY = '<SINGLEHOP_API_KEY>'
+
     CLIENT_ID = '<SINGLEHOP_CLIENT_ID>'
+
     PASSWORD = '<SINGLEHOP_PASSWORD>'
 
 
