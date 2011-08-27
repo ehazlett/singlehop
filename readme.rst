@@ -18,7 +18,7 @@ Create a `local_settings.py` file (or edit `settings.py`) in the `singlehop` dir
 Modules
 --------
 
-SingleHop breaks their API into modules.  
+SingleHop separates their API into modules based on functionality (i.e. Account, Billing, Support, Server).
 
 AccountModule
 ==============
