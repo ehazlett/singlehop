@@ -447,5 +447,65 @@ class ServerModule(SingleHopModule):
             data = {}
             data['data'] = resp.content
             return json.loads(data)
+    
+    def cascade_move_vm(self, vm_id=None, server_id=None):
+        """
+        Migrates a Cascade VM to another host
 
+        * Only Canopy VMs can be migrated and target server must have
+        enough free RAM to accomodate the VM
 
+        :keyword vm_id: ID of virtual machine
+        :keyword server_id: ID of server
+
+        """
+        if not vm_id or not server_id:
+            raise SingleHopError('You must specify a vm_id and server_id')
+        data = {}
+        data['vmid'] = vm_id
+        data['serverid'] = server_id
+        resp = self.do_request(command='cascadeMoveVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def cascade_create_vm(self, server_id=None, hostname=None, os=None, ram=None, \
+        storage=None, cpu=None, vcpu=None, ips=None, imgstore=None):
+        """
+        Creates a new Cascade VM
+
+        :keyword server_id: ID of host node
+        :keyword hostname: Hostname of vm ; must be unique
+        :keyword os: ID of operating system to use (can be obtained from cascade_list_snapshots)
+        :keyword ram: Ram size in bytes
+        :keyword storage: Storage size in bytes
+        :keyword cpu: CPU priority, 1-100
+        :keyword vcpu: Number of virtual cpus to create, 0-16
+        :keyword ips: IP block size (30, 29, 28)
+        :keyword imgstore: Storage type (canopy, local)
+
+        """
+        if not server_id or not hostname or not os or not ram or not storage \
+            or not cpu or not vcpu or not ips or not imgstore:
+            raise SingleHopError("""You must specify a server_id, hostname, os, ram, """\
+                """storage, cpu, vcpu, ips, and imgstore""")
+        data = {}
+        data['serverid'] = server_id
+        data['hostname'] = hostname
+        data['os'] = os
+        data['ram'] = ram
+        data['storage'] = storage
+        data['cpu'] = cpu
+        data['vcpu'] = vcpu
+        data['ips'] = ips
+        data['imgstore'] = imgstore
+        resp = self.do_request(command='cascadeCreateVm', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
