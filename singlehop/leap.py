@@ -329,3 +329,83 @@ class ServerModule(SingleHopModule):
             data['data'] = resp.content
             return json.loads(data)
 
+    def cancellation_request(self, servers=None, happy=None, reason=None):
+        """
+        Submit a cancellation request
+
+        :keyword servers: List of server IDs to cancel
+        :keyword happy: Satified with service or not
+        :keyword reason: Reason for cancellation.  Avaialable options:
+             Going out of buisness, Financial Reasons, Client Cancelled,
+             Do not need a server, Service Interruptions,
+             Support was not what I expected, Unsatisfied with price
+
+        """
+        if not servers or happy == None or not reason:
+            raise SingleHopError('You must specify a server_id, happy, and reason')
+        data = {}
+        data['servers'] = servers
+        data['happy'] = happy
+        data['reason'] = reason
+        resp = self.do_request(command='cancellationRequest', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+    
+    def cascade_get_cpu_usage(self, server_id=None):
+        """
+        Gets CPU usage of specified Cascade VM
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='cascadeGetCpuUsage', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def cascade_get_node_properties(self, server_id=None):
+        """
+        Get information about a Cascade host node
+
+        ** Currently doesn't work with SingleHop API:
+
+        Error: Call to undefined method Cascade::getFreeStorage() in <b>/home/leap/lib/class/Api.class.php</b> on line <b>624</b>
+
+        :keyword server_id: ID of server
+
+        """
+        if not server_id:
+            raise SingleHopError('You must specify a server_id')
+        data = {}
+        data['serverid'] = server_id
+        resp = self.do_request(command='cascadeGetNodeProperties', data=data)
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)
+
+    def cascade_list_snapshots(self):
+        """
+        Lists available operating system snapshots
+
+        """
+        resp = self.do_request(command='cascadeListSnapshots')
+        try:
+            return json.loads(resp.content)
+        except:
+            data = {}
+            data['data'] = resp.content
+            return json.loads(data)

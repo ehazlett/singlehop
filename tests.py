@@ -112,7 +112,10 @@ class TestServerModule(unittest.TestCase):
         resp = self.srvm.list_servers()
         srvs = resp['servers']
         if len(srvs) > 0:
-            srv_id = srvs[0]['server_id']
+            for srv in srvs:
+                if srv['type'] == 'vm':
+                    srv_id = srv['server_id']
+                    break
             resp = self.srvm.get_server_ips(srv_id)
             self.assertTrue(isinstance(resp, dict))
             if resp.has_key('error'):
@@ -164,11 +167,47 @@ class TestServerModule(unittest.TestCase):
     def test_list_available_servers(self):
         resp = self.srvm.list_available_servers()
         self.assertNotEqual(resp, None)
-        self.assertTrue(isinstance(resp, dict))
-        if resp.has_key('error'):
-            self.assertTrue(resp['error'].find('JSON Decoding error') == -1)
-            self.assertTrue(resp['error'].find('No Such Command') == -1)
+        self.assertTrue(isinstance(resp, list))
 
+    def test_cascade_get_cpu_usage(self):
+        resp = self.srvm.list_servers()
+        srvs = resp['servers']
+        if len(srvs) > 0:
+            for srv in srvs:
+                if srv['type'] == 'vm':
+                    srv_id = srv['server_id']
+                    break
+            resp = self.srvm.cascade_get_cpu_usage(srv_id)
+            if resp != None:
+                self.assertTrue(isinstance(resp, dict))
+                if resp.has_key('error'):
+                    self.assertTrue(resp['error'].find('JSON Decoding error') == -1)
+                    self.assertTrue(resp['error'].find('No Such Command') == -1)
+        else:
+            print('You must have a server to test getting details')
+
+    def test_cascade_get_node_properties(self):
+        ''' *** Currently doesn't work in the SingleHopAPI'''
+        resp = self.srvm.list_servers()
+        srvs = resp['servers']
+        if len(srvs) > 0:
+            for srv in srvs:
+                if srv['type'] == 'vmnode':
+                    srv_id = srv['server_id']
+                    break
+            resp = self.srvm.cascade_get_node_properties(srv_id)
+            if resp != None:
+                self.assertTrue(isinstance(resp, dict))
+                if resp.has_key('error'):
+                    self.assertTrue(resp['error'].find('JSON Decoding error') == -1)
+                    self.assertTrue(resp['error'].find('No Such Command') == -1)
+        else:
+            print('You must have a server to test getting details')
+
+    def test_cascade_list_snapshots(self):
+        resp = self.srvm.cascade_list_snapshots()
+        self.assertNotEqual(resp, None)
+        self.assertTrue(isinstance(resp, list))
 
 if __name__=='__main__':
     unittest.main()
